@@ -1,0 +1,18 @@
+# (c) 2015, avx
+# License: MIT
+
+# this function does an animated move/scroll between pages (horizontally) and
+# wraps around at the first/last page
+
+DestroyFunc AnimatedScroll
+AddToFunc AnimatedScroll
++ I PipeRead '\
+     case $0 in \
+      left)  [[ $[page.nx] -eq 0 ]] && echo "GotoPage $$(( $[desk.pagesx] - 1 )) $[page.ny]" || for ((i=0;i<8;i++)) ; do echo "Scroll -$$(( $[vp.width] / 8 ))p 0" ; sleep .03 ; done ;; \
+      right) [[ $[page.nx] -eq $$(( $[desk.pagesx] - 1 )) ]] && echo "GotoPage 0 $[page.ny]" || for ((i=0;i<8;i++)) ; do echo "Scroll $$(( $[vp.width] / 8 ))p 0" ; sleep .03 ; done ;; \
+     esac'
+
+
+# keybindings, mod4 is the "windows"-key in this case
+Key left  A 4 AnimatedScroll left
+Key right A 4 AnimatedScroll right
